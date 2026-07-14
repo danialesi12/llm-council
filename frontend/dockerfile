@@ -1,0 +1,17 @@
+# Usa una versione di Node.js recente e leggera
+FROM node:20-slim
+
+# Imposta la directory di lavoro
+WORKDIR /app
+
+# Copia i file di configurazione dei pacchetti
+COPY package*.json ./
+
+# Installa le dipendenze
+RUN npm install
+
+# Copia il resto del codice sorgente del frontend
+COPY . .
+
+# Il comando di default verrà sovrascritto dal docker-compose (npm run dev)
+CMD ["npm", "start"]
