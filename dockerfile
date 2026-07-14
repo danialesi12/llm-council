@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copia il resto del codice
 COPY . .
 
-# Comando di default (sovrascrivibile dal docker-compose)
-CMD ["python", "--version"]
+# Sostituisci main.py con il file effettivo della repo (es. app.py o server.py)
+CMD ["python", "main.py"]
