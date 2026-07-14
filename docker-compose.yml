@@ -7,8 +7,8 @@ services:
       dockerfile: backend/Dockerfile
     container_name: llm-council-backend
     ports:
-      # Usiamo la porta 8099 esterna per evitare i conflitti sulla VPS
-      - "8099:8000"
+      # Mappiamo la porta 8081 esterna sulla 8001 interna di FastAPI
+      - "8081:8001"
     volumes:
       - .:/app
     env_file:
@@ -21,13 +21,13 @@ services:
       dockerfile: Dockerfile
     container_name: llm-council-frontend
     ports:
-      - "3000:3000"
+      # Mappiamo la porta 5174 esterna sulla 5173 interna di Vite
+      - "5174:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      # ⚠️ IMPORTANTE: Sostituisci questo URL con il dominio reale che assegnerai al backend su Coolify!
+      # ⚠️ Sostituisci con l'URL pubblico reale che assegnerai al backend su Coolify
+      - VITE_API_BASE=https://api-council.tuodominio.com
       - VITE_API_URL=https://api-council.tuodominio.com
-      - REACT_APP_API_URL=https://api-council.tuodominio.com
     tty: true
-    command: npm run dev
