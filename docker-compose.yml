@@ -7,10 +7,7 @@ services:
       dockerfile: backend/Dockerfile
     container_name: llm-council-backend
     ports:
-      # Mappiamo la porta 8081 esterna sulla 8001 interna di FastAPI
       - "8081:8001"
-    volumes:
-      - .:/app
     env_file:
       - .env
     tty: true
@@ -21,13 +18,9 @@ services:
       dockerfile: Dockerfile
     container_name: llm-council-frontend
     ports:
-      # Mappiamo la porta 5174 esterna sulla 5173 interna di Vite
       - "5174:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     environment:
-      # ⚠️ Sostituisci con l'URL pubblico reale che assegnerai al backend su Coolify
-      - VITE_API_BASE=https://api-council.tuodominio.com
-      - VITE_API_URL=https://api-council.tuodominio.com
+      # Punta al dominio sslip.io pubblico del tuo backend (senza porta alla fine!)
+      - VITE_API_BASE=http://zbg3qvd5nf3ugr03u5rw8c8p.213.199.59.101.sslip.io
+      - VITE_API_URL=http://zbg3qvd5nf3ugr03u5rw8c8p.213.199.59.101.sslip.io
     tty: true
