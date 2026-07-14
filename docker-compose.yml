@@ -1,13 +1,12 @@
 version: '3.8'
 
 services:
-  backend:
+backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     container_name: llm-council-backend
-    ports:
-      - "8000:8000"
+    # ❌ ABBIAMO RIMOSSO LA SEZIONE "ports" DA QUI
     volumes:
       - .:/app
     env_file:
