@@ -1,25 +1,17 @@
-# Usa una versione di Python recente e leggera
 FROM python:3.11-slim
 
-# Imposta la directory di lavoro
 WORKDIR /app
 
-# Installa le dipendenze di sistema essenziali
+# Installa dipendenze essenziali
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiamo i file di gestione delle dipendenze dalla root
-# (Nota: usiamo il context della root per vederli)
-COPY pyproject.toml uv.lock* ./
-
-# Installa i pacchetti necessari (se non usi uv nel container, installiamo i pacchetti base)
+# Installiamo uvicorn, fastapi e le altre librerie richieste
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir anthropic openai tiktoken python-dotenv
+    pip install --no-cache-dir fastapi uvicorn httpx pydantic anthropic openai tiktoken python-dotenv
 
-# Copia il codice del backend dentro il container
-COPY backend/ ./backend/
-COPY main.py ./
+COPY . .
 
-# Comando per avviare l'applicazione
-CMD ["python", "main.py"]
+# Avviamo il VERO server FastAPI sulla porta 8001
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8001"]
