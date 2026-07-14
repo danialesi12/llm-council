@@ -1,12 +1,15 @@
 version: '3.8'
 
 services:
-backend:
+  backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     container_name: llm-council-backend
-    # ❌ ABBIAMO RIMOSSO LA SEZIONE "ports" DA QUI
+    ports:
+      # Mappa la porta 8080 della VPS sulla porta 8000 interna del container.
+      # Questo evita il conflitto con la porta 8000 già occupata.
+      - "8080:8000"
     volumes:
       - .:/app
     env_file:
@@ -19,13 +22,14 @@ backend:
       dockerfile: Dockerfile
     container_name: llm-council-frontend
     ports:
+      # Mappa la porta 3000 della VPS su quella del container.
       - "3000:3000"
-      - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:8000
-      - REACT_APP_API_URL=http://localhost:8000
+      # Aggiorna gli URL dicendo al frontend di puntare alla porta 8080
+      - VITE_API_URL=http://localhost:8080
+      - REACT_APP_API_URL=http://localhost:8080
     tty: true
     command: npm run dev
