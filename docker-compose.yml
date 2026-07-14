@@ -1,0 +1,19 @@
+services:
+  llm-council:
+    build: .
+    container_name: llm-council-dev
+    # Mappa la cartella corrente in /app dentro il container per l'hot-reloading
+    volumes:
+      - .:/app
+    # Legge le variabili d'ambiente (es. OPENAI_API_KEY) dal file .env
+    env_file:
+      - .env
+    # Scommenta la riga sotto e inserisci il comando principale se vuoi che parta in automatico
+    # command: python main.py 
+    
+    # Scommenta la sezione ports se il progetto avvia un server web (es. Streamlit su 8501)
+    # ports:
+    #   - "8501:8501"
+    
+    # Mantiene il container in vita se non c'è un comando in esecuzione, utile per lo sviluppo
+    tty: true
