@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import List, Dict, Any
+import os
 import uuid
 import json
 import asyncio
@@ -14,15 +15,23 @@ from .council import run_full_council, generate_conversation_title, stage1_colle
 
 app = FastAPI(title="LLM Council API")
 
-# Enable CORS for local development
+# Recupera l'URL pubblico del frontend da Coolify. Se non esiste, usa il fallback locale.
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    frontend_url,  # Sblocca il dominio sslip.io in produzione
+]
+
+# Enable CORS for development and production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 class CreateConversationRequest(BaseModel):
     """Request to create a new conversation."""
