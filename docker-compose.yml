@@ -1,19 +1,40 @@
 services:
-  llm-council:
-    build: .
-    container_name: llm-council-dev
-    # Mappa la cartella corrente in /app dentro il container per l'hot-reloading
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: llm-council-backend
+    # Esponiamo la porta 8000 (tipica per i backend Python/FastAPI)
+    ports:
+      - "8000:8000"
     volumes:
       - .:/app
-    # Legge le variabili d'ambiente (es. OPENAI_API_KEY) dal file .env
     env_file:
       - .env
-    # Scommenta la riga sotto e inserisci il comando principale se vuoi che parta in automatico
-    # command: python main.py 
-    
-    # Scommenta la sezione ports se il progetto avvia un server web (es. Streamlit su 8501)
-    # ports:
-    #   - "8501:8501"
-    
-    # Mantiene il container in vita se non c'è un comando in esecuzione, utile per lo sviluppo
     tty: true
+    # Scommenta quando sai il comando esatto del backend
+    # command: python main.py 
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: llm-council-frontend
+    # Esponiamo sia la porta 3000 (React standard) che la 5173 (Vite), 
+    # a seconda di cosa usa il progetto
+    ports:
+      - "3000:3000"
+      - "5173:5173"
+    volumes:
+      # Mappa il codice locale per l'hot-reloading
+      - ./frontend:/app
+      # Questo volume anonimo impedisce che la cartella node_modules locale 
+      # (che potrebbe essere vuota o incompatibile) sovrascriva quella del container
+      - /app/node_modules
+    environment:
+      # Passa l'URL del backend al frontend (modifica se il frontend si aspetta una variabile diversa)
+      - VITE_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://localhost:8000
+    tty: true
+    # Comando di avvio standard per i frontend in sviluppo
+    command: npm run dev
