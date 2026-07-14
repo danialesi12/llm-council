@@ -7,9 +7,8 @@ services:
       dockerfile: backend/Dockerfile
     container_name: llm-council-backend
     ports:
-      # Mappa la porta 8080 della VPS sulla porta 8000 interna del container.
-      # Questo evita il conflitto con la porta 8000 già occupata.
-      - "8080:8000"
+      # Usiamo la porta 8099 esterna per evitare i conflitti sulla VPS
+      - "8099:8000"
     volumes:
       - .:/app
     env_file:
@@ -22,14 +21,13 @@ services:
       dockerfile: Dockerfile
     container_name: llm-council-frontend
     ports:
-      # Mappa la porta 3000 della VPS su quella del container.
       - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      # Aggiorna gli URL dicendo al frontend di puntare alla porta 8080
-      - VITE_API_URL=http://localhost:8080
-      - REACT_APP_API_URL=http://localhost:8080
+      # ⚠️ IMPORTANTE: Sostituisci questo URL con il dominio reale che assegnerai al backend su Coolify!
+      - VITE_API_URL=https://api-council.tuodominio.com
+      - REACT_APP_API_URL=https://api-council.tuodominio.com
     tty: true
     command: npm run dev
