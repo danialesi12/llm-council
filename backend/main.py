@@ -15,16 +15,16 @@ from .council import run_full_council, generate_conversation_title, stage1_colle
 
 app = FastAPI(title="LLM Council API")
 
-# Recupera l'URL pubblico del frontend da Coolify. Se non esiste, usa il fallback locale.
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# Recuperiamo l'URL del frontend usando la variabile reale di Coolify
+frontend_url = os.getenv("SERVICE_URL_FRONTEND", "http://localhost:5173")
 
 origins = [
     "http://localhost:5173",
     "http://localhost:3000",
-    frontend_url,  # Sblocca il dominio sslip.io in produzione
+    frontend_url,  # Sblocca il tuo dominio sslip.io in produzione
 ]
 
-# Enable CORS for development and production
+# Enable CORS for both local dev and production
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
